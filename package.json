@@ -1,28 +1,41 @@
 {
 	"name": "python-image-preview",
 	"displayName": "Python Image Preview",
-	"description": "",
-	"version": "0.0.1",
+	"description": "OpenCV, Pillow, Matplotlib Image Preview",
+	"version": "0.0.2",
 	"publisher": "076923",
 	"engines": {
 		"vscode": "^1.57.0"
 	},
+	"icon": "images/icon.jpg",
 	"categories": [
+		"Debuggers",
 		"Other"
 	],
+	"keywords": [
+        "python",
+		"image",
+        "opencv",
+        "pillow",
+        "matplotlib",
+		"numpy",
+        "preview"
+    ],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/076923/python-image-preview"
 	},
 	"activationEvents": [
-		"onCommand:python-image-preview.pythonImagePreview"
+		"onCommand:extension.pythonImagePreview",
+		"onDebugResolve:python"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "python-image-preview.pythonImagePreview",
-				"title": "Python Image Preview"
+				"command": "extension.pythonImagePreview",
+				"title": "Python Image Preview",
+				"enablement": "inDebugMode"
 			}
 		]
 	},

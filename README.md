@@ -12,15 +12,18 @@ Requires one or more of the following libraries:
 
 ## How to use
 
-1. Open Command Palette
+1. Set a `breakpoint` on the line of code.
+
+2. `Debug Mode Start`
+
+3. `Open Command Palette`
 	- Windows : Ctrl + P
 	- MacOS : ⌘ + P
-2. Run `Python Image Preview`
+
+4. Run `Python Image Preview`
 	- Enter `> Python Image Preview` on the command palette.
 
-3. Insert breakpoint.
-
-4. Debug Mode Start
+5. Click on the variable.
 
 ### Apply OpenCV
 
@@ -30,7 +33,7 @@ Requires one or more of the following libraries:
 
 ![OpenCV](images/PIL.gif)
 
-### Apply matplotlib
+### Apply Matplotlib
 
 ![OpenCV](images/matplotlib.gif)
 
