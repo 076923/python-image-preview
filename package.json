@@ -1,13 +1,13 @@
 {
 	"name": "python-image-preview",
 	"displayName": "Python Image Preview",
-	"description": "OpenCV, Pillow, Matplotlib Image Preview",
-	"version": "0.0.2",
+	"description": "Numpy, Pillow, OpenCV, Matplotlib, ImageIO, Scikit Image, Tensorflow, Pytorch Image Preview",
+	"version": "0.0.5",
 	"publisher": "076923",
 	"engines": {
 		"vscode": "^1.57.0"
 	},
-	"icon": "images/icon.jpg",
+	"icon": "images/icon.png",
 	"categories": [
 		"Debuggers",
 		"Other"
@@ -15,10 +15,15 @@
 	"keywords": [
         "python",
 		"image",
-        "opencv",
-        "pillow",
-        "matplotlib",
 		"numpy",
+        "pillow",
+        "opencv",
+        "matplotlib",
+        "imageio",
+        "scikit-image",
+        "skimage",
+        "tensorflow",
+        "pytorch",
         "preview"
     ],
 	"repository": {

@@ -6,9 +6,14 @@ You can quickly check your Python image data.
 
 Requires one or more of the following libraries:
 
+- numpy : `necessary`
+- pillow : `necessary`
 - opencv-python
-- pillow
 - matplotlib
+- imageio
+- tensorflow
+- pytorch
+- skimage
 
 ## How to use
 
@@ -25,17 +30,39 @@ Requires one or more of the following libraries:
 
 5. Click on the variable.
 
+<br>
+
+### Apply Numpy
+
+![Numpy](images/Numpy.gif)
+
+### Apply Pillow
+
+![Pillow](images/Pillow.gif)
+
 ### Apply OpenCV
 
 ![OpenCV](images/OpenCV.gif)
 
-### Apply PIL
-
-![OpenCV](images/PIL.gif)
-
 ### Apply Matplotlib
 
-![OpenCV](images/matplotlib.gif)
+![Matplotlib](images/Matplotlib.gif)
+
+### Apply ImageIO
+
+![ImageIO](images/ImageIO.gif)
+
+### Apply Scikit Image
+
+![ImageIO](images/Scikit-Image.gif)
+
+### Apply Tensorflow
+
+![ImageIO](images/Tensorflow.gif)
+
+### Apply Pytorch
+
+![ImageIO](images/Pytorch.gif)
 
 ## Authors
 
