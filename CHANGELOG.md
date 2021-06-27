@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.0.6]
+
+- Update self keyword preview
+
 ## [0.0.5]
 
 - Update PIL

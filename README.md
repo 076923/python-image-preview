@@ -6,14 +6,22 @@ You can quickly check your Python image data.
 
 Requires one or more of the following libraries:
 
-- numpy : `necessary`
-- pillow : `necessary`
+- pillow
 - opencv-python
 - matplotlib
-- imageio
+- imageio 
+
+## Supported Libraries
+
+- numpy
+- pillow
+- opencv-python
+- matplotlib
+- imageio 
 - tensorflow
 - pytorch
 - skimage
+- etc.
 
 ## How to use
 
