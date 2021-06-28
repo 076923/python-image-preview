@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.0.7]
+
+- Bug Fix
+
 ## [0.0.6]
 
 - Update self keyword preview
