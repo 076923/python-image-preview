@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.0.8]
+
+- Update Thread support
+
 ## [0.0.7]
 
 - Bug Fix
