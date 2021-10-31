@@ -56,6 +56,10 @@ Requires one or more of the following libraries:
 
 ![Matplotlib](images/Matplotlib.gif)
 
+### Apply Matplotlib PyPlot
+
+![PyPlot](images/Figure.gif)
+
 ### Apply ImageIO
 
 ![ImageIO](images/ImageIO.gif)

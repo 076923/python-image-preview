@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.1.0]
+
+- Matplotlib pyplot support
+
 ## [0.0.9]
 
 - Pytorch CUDA support
