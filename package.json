@@ -1,8 +1,8 @@
 {
 	"name": "python-image-preview",
 	"displayName": "Python Image Preview",
-	"description": "Numpy, Pillow, OpenCV, Matplotlib, ImageIO, Scikit Image, Tensorflow, Pytorch Image Preview",
-	"version": "0.1.0",
+	"description": "Numpy, Pillow, OpenCV, Matplotlib, Plotly, ImageIO, Scikit Image, Tensorflow, Pytorch Image Preview",
+	"version": "0.1.1",
 	"publisher": "076923",
 	"engines": {
 		"vscode": "^1.57.0"

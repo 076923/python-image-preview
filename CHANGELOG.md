@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.1.1]
+
+- Plotly support
+  - Required Libraries : `kaleido`
+  - `pip install -U kaleido`
+
 ## [0.1.0]
 
 - Matplotlib pyplot support

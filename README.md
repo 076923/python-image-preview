@@ -9,7 +9,8 @@ Requires one or more of the following libraries:
 - pillow
 - opencv-python
 - matplotlib
-- imageio 
+- image
+- plotly + kaleido
 
 ## Supported Libraries
 
@@ -21,6 +22,7 @@ Requires one or more of the following libraries:
 - tensorflow
 - pytorch
 - skimage
+- plotly + kaleido
 - etc.
 
 ## How to use
@@ -59,6 +61,10 @@ Requires one or more of the following libraries:
 ### Apply Matplotlib PyPlot
 
 ![PyPlot](images/Figure.gif)
+
+### Apply Plotly
+
+![Plotly](images/Plotly.gif)
 
 ### Apply ImageIO
 
