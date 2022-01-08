@@ -18,11 +18,12 @@ Requires one or more of the following libraries:
 - pillow
 - opencv-python
 - matplotlib
-- imageio 
+- seaborn
+- plotly + kaleido
+- imageio
+- skimage
 - tensorflow
 - pytorch
-- skimage
-- plotly + kaleido
 - etc.
 
 ## How to use
@@ -62,6 +63,10 @@ Requires one or more of the following libraries:
 
 ![PyPlot](images/Figure.gif)
 
+### Apply Seaborn
+
+![Seaborn](images/Seaborn.gif)
+
 ### Apply Plotly
 
 ![Plotly](images/Plotly.gif)
@@ -72,15 +77,15 @@ Requires one or more of the following libraries:
 
 ### Apply Scikit Image
 
-![ImageIO](images/Scikit-Image.gif)
+![Scikit](images/Scikit-Image.gif)
 
 ### Apply Tensorflow
 
-![ImageIO](images/Tensorflow.gif)
+![Tensorflow](images/Tensorflow.gif)
 
 ### Apply Pytorch
 
-![ImageIO](images/Pytorch.gif)
+![Pytorch](images/Pytorch.gif)
 
 ## Authors
 

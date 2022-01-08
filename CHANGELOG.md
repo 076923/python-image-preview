@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.1.2]
+
+- Seaborn support
+
 ## [0.1.1]
 
 - Plotly support
