@@ -1,0 +1,39 @@
+name: Bug report
+description: A preview is missing, wrong, or the extension misbehaves
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Extension / VS Code / Python versions
+      placeholder: "1.0.0 / 1.95.0 / 3.12"
+    validations:
+      required: true
+  - type: input
+    id: library
+    attributes:
+      label: Library and version of the object you tried to preview
+      placeholder: "torch 2.4.0"
+    validations:
+      required: true
+  - type: input
+    id: typename
+    attributes:
+      label: Type name shown in the Variables panel
+      placeholder: "Tensor"
+  - type: textarea
+    id: log
+    attributes:
+      label: Output channel log
+      description: View → Output → "Python Image Preview". Paste the lines for the failed attempt.
+      render: text
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal code to reproduce
+      render: python
+  - type: dropdown
+    id: remote
+    attributes:
+      label: Environment
+      options: [Local, Remote-SSH, WSL, Dev Container, Other]

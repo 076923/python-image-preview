@@ -1,13 +1,21 @@
 {
 	"name": "python-image-preview",
 	"displayName": "Python Image Preview",
-	"description": "Numpy, Pillow, OpenCV, Matplotlib, Plotly, ImageIO, Scikit Image, Tensorflow, Pytorch Image Preview",
-	"version": "0.1.2",
+	"description": "Preview arrays, tensors and figures while debugging: NumPy, Pillow, OpenCV, Matplotlib, Seaborn, Plotly, pandas, TensorFlow, PyTorch, JAX, CuPy, SimpleITK, nibabel, Bokeh, Altair",
+	"version": "1.0.0",
 	"publisher": "076923",
+	"license": "SEE LICENSE IN LICENSE.md",
 	"engines": {
-		"vscode": "^1.57.0"
+		"vscode": "^1.90.0"
 	},
-	"icon": "images/icon.png",
+	"extensionKind": [
+		"workspace"
+	],
+	"icon": "images/brand/icon.png",
+	"galleryBanner": {
+		"color": "#1a2038",
+		"theme": "dark"
+	},
 	"categories": [
 		"Debuggers",
 		"Data Science",
@@ -15,64 +23,118 @@
 		"Visualization"
 	],
 	"keywords": [
-        "python",
+		"python",
 		"image",
 		"numpy",
-        "pillow",
-        "opencv",
-        "matplotlib",
+		"pillow",
+		"opencv",
+		"matplotlib",
 		"pyplot",
 		"figure",
-        "imageio",
-        "scikit-image",
-        "skimage",
-        "tensorflow",
-        "pytorch",
-        "preview"
-    ],
+		"seaborn",
+		"plotly",
+		"imageio",
+		"scikit-image",
+		"skimage",
+		"tensorflow",
+		"pytorch",
+		"jax",
+		"cupy",
+		"pandas",
+		"simpleitk",
+		"nibabel",
+		"bokeh",
+		"altair",
+		"preview",
+		"debug",
+		"debugpy"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/076923/python-image-preview"
 	},
+	"bugs": {
+		"url": "https://github.com/076923/python-image-preview/issues"
+	},
+	"qna": "https://github.com/076923/python-image-preview/issues",
 	"activationEvents": [
-		"onCommand:extension.pythonImagePreview",
-		"onDebugResolve:python"
+		"onDebugResolve:python",
+		"onDebugResolve:debugpy"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.pythonImagePreview",
-				"title": "Python Image Preview",
-				"enablement": "inDebugMode"
+				"command": "pythonImagePreview.preview",
+				"title": "Preview Image at Cursor",
+				"category": "Python Image Preview",
+				"enablement": "inDebugMode && editorLangId == python"
+			},
+			{
+				"command": "pythonImagePreview.clearCache",
+				"title": "Clear Preview Cache",
+				"category": "Python Image Preview"
 			}
-		]
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "pythonImagePreview.preview",
+					"when": "inDebugMode && editorLangId == python",
+					"group": "navigation@50"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Python Image Preview",
+			"properties": {
+				"pythonImagePreview.keepHistory": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Write every preview to a new file (`name-HHMMSS-mmm.png`) so each one opens in its own tab and earlier previews stay open for comparison. When off, a variable always reuses the same file."
+				},
+				"pythonImagePreview.cacheDirectory": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "Directory where preview images are written. Leave empty to use a folder under the OS temp directory. Supports `${workspaceFolder}`, `${workspaceFolderBasename}`, `${fileDirname}`, `${fileBasenameNoExtension}`, `${userHome}`, `${tmpdir}` and `${env:NAME}`. The debugged Python process must be able to write here."
+				},
+				"pythonImagePreview.clearOnSessionEnd": {
+					"type": "boolean",
+					"default": true,
+					"description": "Delete preview images when the debug session ends."
+				},
+				"pythonImagePreview.openBeside": {
+					"type": "boolean",
+					"default": true,
+					"description": "Open the preview in a column beside the editor instead of the active column."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
-		"compile": "webpack",
-		"watch": "webpack --watch",
-		"package": "webpack --mode production --devtool hidden-source-map",
-		"test-compile": "tsc -p ./",
-		"test-watch": "tsc -watch -p ./",
-		"pretest": "npm run test-compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"compile": "npm run check-types && npm run lint && node esbuild.mjs",
+		"watch": "npm-run-all -p watch:*",
+		"watch:esbuild": "node esbuild.mjs --watch",
+		"watch:tsc": "tsc --noEmit --watch -p ./",
+		"package": "npm run check-types && npm run lint && node esbuild.mjs --production",
+		"check-types": "tsc --noEmit -p ./",
+		"lint": "eslint src",
+		"pretest": "tsc -p ./ && npm run lint",
+		"test": "vscode-test",
+		"vsix": "vsce package"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.57.0",
-		"@types/glob": "^7.1.3",
-		"@types/mocha": "^8.2.2",
-		"@types/node": "14.x",
-		"eslint": "^7.27.0",
-		"@typescript-eslint/eslint-plugin": "^4.26.0",
-		"@typescript-eslint/parser": "^4.26.0",
-		"glob": "^7.1.7",
-		"mocha": "^8.4.0",
-		"typescript": "^4.3.2",
-		"vscode-test": "^1.5.2",
-		"ts-loader": "^9.2.2",
-		"webpack": "^5.38.1",
-		"webpack-cli": "^4.7.0"
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^20.19.0",
+		"@types/vscode": "^1.90.0",
+		"@vscode/test-cli": "^0.0.15",
+		"@vscode/test-electron": "^3.1.0",
+		"@vscode/vsce": "^3.6.0",
+		"esbuild": "^0.28.0",
+		"eslint": "^9.39.0",
+		"npm-run-all": "^4.1.5",
+		"typescript": "^5.9.0",
+		"typescript-eslint": "^8.72.0"
 	}
 }

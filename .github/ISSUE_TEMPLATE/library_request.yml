@@ -1,0 +1,23 @@
+name: Library support request
+description: Ask for a new object type to be previewable
+labels: [enhancement]
+body:
+  - type: input
+    id: library
+    attributes:
+      label: Library
+      placeholder: "cupy"
+    validations:
+      required: true
+  - type: input
+    id: typename
+    attributes:
+      label: Type name shown in the Variables panel
+      placeholder: "ndarray"
+    validations:
+      required: true
+  - type: textarea
+    id: howto
+    attributes:
+      label: How would you save it to PNG by hand?
+      render: python
