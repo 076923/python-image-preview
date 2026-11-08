@@ -94,8 +94,10 @@ The extension is declared as a workspace extension, so with Remote-SSH, WSL or D
 - **A renderer is missing.** The library is not importable in the debugged interpreter, or rendering raised. Check the output channel for the exception.
 - **Plotly / Bokeh / Altair.** These need their own export backends (`kaleido`, `selenium`/`playwright`, `vl-convert-python`).
 
+## Demos
+
 <details>
-<summary>Demos recorded with v0.1 (the old command-palette flow; the quick fix is the same)</summary>
+<summary>Show demos</summary>
 
 | | |
 | --- | --- |
