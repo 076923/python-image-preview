@@ -10,3 +10,4 @@ package-lock.json
 *.pyc
 src/**
 sandbox/
+vsix/
