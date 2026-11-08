@@ -82,6 +82,11 @@
 				"category": "Python Image Preview"
 			},
 			{
+				"command": "pythonImagePreview.openSettings",
+				"title": "Open Settings",
+				"category": "Python Image Preview"
+			},
+			{
 				"command": "pythonImagePreview.clearCache",
 				"title": "Clear Preview Cache",
 				"category": "Python Image Preview"
@@ -117,26 +122,87 @@
 			"title": "Python Image Preview",
 			"properties": {
 				"pythonImagePreview.keepHistory": {
+					"order": 2,
 					"type": "boolean",
 					"default": false,
 					"markdownDescription": "Write every preview to a new file (`name-HHMMSS-mmm.png`) so each one opens in its own tab and earlier previews stay open for comparison. When off, a variable always reuses the same file."
 				},
 				"pythonImagePreview.cacheDirectory": {
+					"order": 1,
 					"type": "string",
 					"default": "",
 					"markdownDescription": "Directory where preview images are written. Leave empty to use a folder under the OS temp directory. Supports `${workspaceFolder}`, `${workspaceFolderBasename}`, `${fileDirname}`, `${fileBasenameNoExtension}`, `${userHome}`, `${tmpdir}` and `${env:NAME}`. The debugged Python process must be able to write here."
 				},
 				"pythonImagePreview.clearOnSessionEnd": {
+					"order": 3,
 					"type": "boolean",
 					"default": true,
 					"description": "Delete preview images when the debug session ends."
 				},
 				"pythonImagePreview.openBeside": {
+					"order": 4,
 					"type": "boolean",
 					"default": true,
 					"description": "Open the preview in a column beside the editor instead of the active column."
 				},
+				"pythonImagePreview.hoverPreview": {
+					"order": 6,
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "Show a thumbnail and the shape/dtype of an image-like variable when hovering it while the debugger is paused. VS Code shows the debugger's own hover first; hold `Alt` (`Option` on macOS) while hovering to see this one. The thumbnail is rendered in the debugged process the first time a variable is hovered at a given stop."
+				},
+				"pythonImagePreview.hoverThumbnailWidth": {
+					"order": 7,
+					"type": "number",
+					"default": 320,
+					"minimum": 64,
+					"maximum": 800,
+					"description": "Maximum width in pixels of the thumbnail shown in the hover. The image is scaled down to fit both limits, keeping its aspect ratio."
+				},
+				"pythonImagePreview.hoverThumbnailHeight": {
+					"order": 8,
+					"type": "number",
+					"default": 120,
+					"minimum": 48,
+					"maximum": 600,
+					"description": "Maximum height in pixels of the thumbnail shown in the hover. Keep it small enough for the hover to show without scrolling; when hovering a variable name with Alt, other extensions' hovers (e.g. Pylance) share the same popup."
+				},
+				"pythonImagePreview.inlineThumbnails": {
+					"order": 9,
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "While paused, show a small thumbnail right before each visible mention of an image-like local variable. Hover the thumbnail for a larger preview and the renderer links. Thumbnails are rendered in the debugged process once per stop and variable."
+				},
+				"pythonImagePreview.inlineThumbnailHeight": {
+					"order": 10,
+					"type": "number",
+					"default": 0,
+					"minimum": 0,
+					"maximum": 48,
+					"markdownDescription": "Height in pixels of the inline thumbnail. `0` follows the editor line height (from `#editor.lineHeight#` or `#editor.fontSize#`). Larger values make neighbouring lines overlap."
+				},
+				"pythonImagePreview.inlineThumbnailLimit": {
+					"order": 11,
+					"type": "number",
+					"default": 40,
+					"minimum": 1,
+					"maximum": 500,
+					"description": "Maximum number of variables rendered as inline thumbnails per stop, nearest to the paused line first. Lower it if stepping feels slow in functions with many large images."
+				},
+				"pythonImagePreview.inlineValues": {
+					"order": 12,
+					"type": "string",
+					"enum": ["images", "all", "off"],
+					"default": "off",
+					"markdownEnumDescriptions": [
+						"Show `img: (480, 640, 3) uint8` for image-like local variables only. Other variables show no inline value.",
+						"Image-like variables show their shape and dtype; every other variable shows its value as VS Code normally does.",
+						"Leave inline values entirely to VS Code."
+					],
+					"markdownDescription": "What to show at the end of lines while paused (requires `#debug.inlineValues#` to be `auto` or `on`)."
+				},
 				"pythonImagePreview.grayscaleColormap": {
+					"order": 5,
 					"type": "string",
 					"default": "gray",
 					"markdownDescription": "Matplotlib colormap applied when a 2-D (single-channel) array is rendered with the Matplotlib renderer, e.g. `gray`, `viridis`, `magma`. Color arrays are not affected."
@@ -155,7 +221,7 @@
 		"lint": "eslint src",
 		"pretest": "tsc -p ./ && npm run lint",
 		"test": "vscode-test",
-		"vsix": "vsce package"
+		"vsix": "vsce package --out vsix/"
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",

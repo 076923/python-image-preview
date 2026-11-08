@@ -3,6 +3,11 @@
 ## [1.1.0] - 2026-11-08
 
 - Renderers are only probed (`importlib.util.find_spec`) when the Quick Fix menu opens; the image is rendered when you pick one. Hovering the lightbulb no longer writes files or imports libraries in the debugged process, and failures now show an error with a **Show Log** button
+- Libraries that share a type name (PIL and SimpleITK `Image`, Matplotlib/Plotly and Bokeh `Figure`) are told apart by module, so only the renderer that applies is offered
+- Hovering an image-like variable with `Alt` held while paused shows its type, shape and dtype with a thumbnail and links to open the full preview (`pythonImagePreview.hoverPreview`, `pythonImagePreview.hoverThumbnailWidth`, `pythonImagePreview.hoverThumbnailHeight`)
+- Inline thumbnails: each visible mention of an image-like local variable gets a small thumbnail before its name; hovering it shows the larger preview and renderer links without holding Alt (`pythonImagePreview.inlineThumbnails`, `pythonImagePreview.inlineThumbnailHeight`, `pythonImagePreview.inlineThumbnailLimit`)
+- Inline Values: lines mentioning an image-like local variable show `img: (480, 640, 3) uint8` at their end. `pythonImagePreview.inlineValues` chooses between `images` (image-like variables only), `all` (other variables show their value too, except modules, functions and classes) and `off` (default)
+- `Python Image Preview: Open Settings` command
 - **Preview Image** in the Variables view context menu; asks for the renderer if several apply
 - A selected expression (`img[..., 0]`, `batch[0]`, `self.model.weight`) can be previewed, not only the word under the cursor
 - Uses the frame selected in the Call Stack view instead of always the top frame of the first stopped thread
