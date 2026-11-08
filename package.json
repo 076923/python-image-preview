@@ -2,7 +2,7 @@
 	"name": "python-image-preview",
 	"displayName": "Python Image Preview",
 	"description": "Preview arrays, tensors and figures while debugging: NumPy, Pillow, OpenCV, Matplotlib, Seaborn, Plotly, pandas, TensorFlow, PyTorch, JAX, CuPy, SimpleITK, nibabel, Bokeh, Altair",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"publisher": "076923",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"engines": {
@@ -71,6 +71,17 @@
 				"enablement": "inDebugMode && editorLangId == python"
 			},
 			{
+				"command": "pythonImagePreview.previewVariable",
+				"title": "Preview Image",
+				"category": "Python Image Preview",
+				"enablement": "inDebugMode"
+			},
+			{
+				"command": "pythonImagePreview.render",
+				"title": "Render Preview",
+				"category": "Python Image Preview"
+			},
+			{
 				"command": "pythonImagePreview.clearCache",
 				"title": "Clear Preview Cache",
 				"category": "Python Image Preview"
@@ -82,6 +93,23 @@
 					"command": "pythonImagePreview.preview",
 					"when": "inDebugMode && editorLangId == python",
 					"group": "navigation@50"
+				}
+			],
+			"debug/variables/context": [
+				{
+					"command": "pythonImagePreview.previewVariable",
+					"when": "debugType =~ /^(python|debugpy)$/",
+					"group": "navigation@50"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "pythonImagePreview.previewVariable",
+					"when": "false"
+				},
+				{
+					"command": "pythonImagePreview.render",
+					"when": "false"
 				}
 			]
 		},
@@ -107,6 +135,11 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Open the preview in a column beside the editor instead of the active column."
+				},
+				"pythonImagePreview.grayscaleColormap": {
+					"type": "string",
+					"default": "gray",
+					"markdownDescription": "Matplotlib colormap applied when a 2-D (single-channel) array is rendered with the Matplotlib renderer, e.g. `gray`, `viridis`, `magma`. Color arrays are not affected."
 				}
 			}
 		}

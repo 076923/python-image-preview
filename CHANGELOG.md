@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.1.0] - 2026-11-08
+
+- Renderers are only probed (`importlib.util.find_spec`) when the Quick Fix menu opens; the image is rendered when you pick one. Hovering the lightbulb no longer writes files or imports libraries in the debugged process, and failures now show an error with a **Show Log** button
+- **Preview Image** in the Variables view context menu; asks for the renderer if several apply
+- A selected expression (`img[..., 0]`, `batch[0]`, `self.model.weight`) can be previewed, not only the word under the cursor
+- Uses the frame selected in the Call Stack view instead of always the top frame of the first stopped thread
+- New setting `pythonImagePreview.grayscaleColormap` (default `gray`); 2-D arrays rendered with Matplotlib were previously saved with `viridis`
+- Fixed: `uint16` arrays were clipped to white and negative floats (`-1..1` tensors) to black; both are now min-max scaled. `NaN` is mapped to 0
+- Fixed: `float16`/`bfloat16` PyTorch tensors failed to convert
+- Fixed: masked entries of `MaskedArray` showed their raw values; they are filled with 0
+- Fixed: preview files were deleted when a debug session of another language ended
+
 ## [1.0.0] - 2026-11-08
 
 First stable release.
