@@ -28,14 +28,16 @@
 1. 확장을 설치합니다. 별도 설정은 없습니다. 이미지를 그릴 때는 디버깅 중인 Python 환경에 설치된 라이브러리를 그대로 사용합니다.
 2. 이미지가 만들어진 다음 줄에 브레이크포인트를 걸고 <kbd>F5</kbd>로 디버깅을 시작합니다.
 3. 멈추는 순간 **현재 함수 안의 이미지 변수 앞에 작은 썸네일**이 붙습니다. 썸네일에 마우스를 올리면 더 큰 이미지와 shape, dtype을 볼 수 있습니다.
-4. 원본 크기로 보고 싶으면 변수에 커서를 두고 <kbd>Ctrl</kbd>+<kbd>.</kbd>(macOS는 <kbd>⌘</kbd>+<kbd>.</kbd>)을 누른 뒤 `[Matplotlib] Preview img` 같은 항목을 고릅니다. 코드 옆 탭에 이미지가 열립니다.
+4. 원본 크기로 보고 싶으면 변수에 커서를 두고 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>(macOS는 <kbd>⌘</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>)를 누릅니다. 코드 옆 탭에 이미지가 열립니다. 렌더러를 직접 고르려면 대신 <kbd>Ctrl</kbd>+<kbd>.</kbd>(macOS는 <kbd>⌘</kbd>+<kbd>.</kbd>)을 누르고 `[Matplotlib] Preview img`, `[OpenCV] Preview img` 같은 항목을 선택합니다.
+
+![멈춘 동안 이미지 변수 앞에 붙는 썸네일](images/demos/inline-thumbnails.png)
 
 기본 사용법은 여기까지입니다. 아래에서 기능별로 자세히 설명합니다.
 
 ## 데모
 
 <details>
-<summary>데모 보기</summary>
+<summary>데모 보기 (1.0 버전의 움직이는 데모)</summary>
 
 | | |
 | --- | --- |
@@ -54,19 +56,43 @@
 
 브레이크포인트에 멈춰 있는 동안, 이미지로 그릴 수 있는 로컬 변수에는 글자 한 줄 높이의 썸네일이 이름 바로 앞에 붙습니다. 그 변수가 나오는 줄마다 붙고, 스텝을 넘기면 새로 그려지며, 프로그램이 다시 실행되면 사라집니다.
 
-- **썸네일에 마우스를 올리면** 큰 이미지와 함께 `img · ndarray (480, 640, 3) uint8`처럼 타입, shape, dtype이 표시되고 `OpenCV · Matplotlib` 같은 링크가 뜹니다. 링크를 누르면 원본 크기로 열립니다. 같은 팝업 위쪽에 디버거의 변수 값이 먼저 나오므로, 미리보기가 안 보이면 아래로 스크롤하거나 <kbd>Alt</kbd>를 눌러 미리보기만 보세요.
+- **썸네일에 마우스를 올리면** 큰 이미지와 함께 `img · ndarray (480, 640, 3) uint8 · min 0 · max 255 · mean 127.3`처럼 타입, shape, dtype, 값 범위가 표시되고 `Matplotlib · OpenCV · Inspect` 같은 링크가 뜹니다. 렌더러를 누르면 원본 크기로 열리고, **Inspect**를 누르면 인스펙터에서 열립니다. 같은 팝업 위쪽에 디버거의 변수 값이 먼저 나오므로, 미리보기가 안 보이면 아래로 스크롤하거나 <kbd>Alt</kbd>를 눌러 미리보기만 보세요.
 - 대상은 **현재 함수의 로컬 변수**(Locals)뿐이고, 디버거가 멈춘 파일에서만 보입니다. `self.img` 같은 속성에는 붙지 않으므로 Quick Fix나 호버를 이용하세요.
-- 멈춘 줄에서 가까운 변수부터 그리고, 한 번 멈출 때 최대 `pythonImagePreview.inlineThumbnailLimit`개까지만 그립니다.
+- 멈춘 줄에서 가까운 변수부터 그리고, 한 번 멈출 때 최대 `pythonImagePreview.inlineThumbnailLimit`개까지만 그립니다. 썸네일은 축소된 크기로 렌더링하므로(배열은 건너뛰며 샘플링, 그래프는 낮은 dpi) 큰 이미지라도 부담이 적습니다. 원본 크기 파일은 미리보기를 열 때만 만듭니다.
 - 거슬리면 `pythonImagePreview.inlineThumbnails`를 꺼 두면 됩니다.
 
-### 원본 크기로 보기 (Quick Fix)
+![썸네일 호버: shape, dtype, 값 범위, 렌더러 링크와 이미지](images/demos/hover-preview.png)
+
+### 원본 크기로 보기
+
+가장 빠른 방법은 변수 이름에 커서를 두고 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>(macOS는 <kbd>⌘</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>)를 누르는 것입니다. 쓸 수 있는 첫 번째 렌더러로 그려서 에디터 옆 칸에 PNG를 엽니다. 같은 명령이 에디터 우클릭 메뉴에 **Preview Image with Default Renderer**로 있습니다.
+
+렌더러를 직접 고르려면(Quick Fix):
 
 1. `img`, `mask`, `self.image` 같은 변수 이름에 커서를 둡니다.
 2. <kbd>Ctrl</kbd>+<kbd>.</kbd>(macOS는 <kbd>⌘</kbd>+<kbd>.</kbd>)을 누릅니다. 우클릭 메뉴의 **Preview Image at Cursor**를 고르거나 전구 아이콘을 눌러도 같습니다.
-3. 렌더러를 고릅니다. 항목 앞의 이름이 이미지를 저장할 라이브러리입니다. `[OpenCV] Preview img`는 배열을 BGR로, `[Matplotlib] Preview img`는 RGB로 해석합니다.
+3. 렌더러를 고릅니다. 항목 앞의 이름이 이미지를 저장할 라이브러리입니다. `[Matplotlib] Preview img`는 배열을 RGB로, `[OpenCV] Preview img`는 BGR로 해석하고, `[Grid] Preview batch`는 배치의 모든 항목을 한 장에 타일로 배치합니다.
 4. 에디터 옆 칸에 PNG가 열립니다. 스텝을 넘긴 뒤 같은 작업을 반복하면 이미지가 갱신됩니다. 이전 결과와 나란히 비교하고 싶으면 `pythonImagePreview.keepHistory`를 켜세요. 매번 새 탭에 열립니다.
 
+![쓸 수 있는 렌더러가 나열된 Quick Fix 메뉴](images/demos/quick-fix.png)
+
 메뉴에는 디버깅 중인 인터프리터에서 import할 수 있는 라이브러리만 나옵니다. `[Matplotlib]`은 있는데 `[OpenCV]`가 없다면 그 환경에 `cv2`가 없는 것입니다. 항목을 고르기 전까지는 아무것도 그리지 않으므로 메뉴만 열어 보는 데는 부담이 없습니다.
+
+일반 배열은 RGB로도 BGR로도 읽을 수 있습니다. `pythonImagePreview.arrayRenderer`(기본 `matplotlib`, 즉 RGB)가 어느 렌더러를 먼저 둘지 정하고, 썸네일·호버·기본 렌더러 명령에도 쓰입니다. 배열이 `cv2.imread`에서 온 것이면 `opencv`로 바꾸세요.
+
+### 배치를 격자로 보기
+
+4차원 배열과 텐서(`N×C×H×W` 또는 `N×H×W×C`)에는 `[Grid]` 항목이 추가됩니다. 모든 항목을 거의 정사각형에 가까운 격자 한 장으로 타일링하고, 항목 사이에 얇은 간격을 둡니다. 다른 렌더러는 첫 번째 항목만 보여 줍니다.
+
+![텐서 4장짜리 배치를 격자로 타일링한 모습](images/demos/grid.png)
+
+### 인스펙터
+
+Quick Fix 메뉴 맨 아래의 `[Inspect] Inspect img`, Variables 패널 우클릭 메뉴의 **Inspect Image**, 호버의 **Inspect** 링크 중 어느 것을 눌러도 VS Code 기본 뷰어 대신 확장의 자체 뷰어가 열립니다. 휠로 커서 위치를 중심으로 확대·축소하고, 드래그로 이동하며, <kbd>0</kbd>은 창에 맞추고 <kbd>1</kbd>은 원본 픽셀 크기로 보여 줍니다. 상단 바에는 커서 아래 픽셀의 좌표와 `rgba` 값이, R/G/B/A/Gray 버튼은 한 채널만, 하단에는 현재 채널의 히스토그램과 min·max·mean이 표시됩니다. `pythonImagePreview.viewer`를 `inspector`로 두면 모든 미리보기가 이 뷰어로 열립니다. 탐색기에서 이미지 파일을 우클릭해 **Inspect Image File**을 고를 수도 있습니다.
+
+![인스펙터: 커서 아래 픽셀 값, 채널 버튼, 히스토그램](images/demos/inspector.png)
+
+표시되는 값은 렌더러가 저장한 8비트 PNG의 값으로, *지원하는 객체*에 적힌 정규화를 거친 뒤의 값입니다. 원래의 실수 값이 아닙니다.
 
 ### 변수가 아닌 표현식 보기
 
@@ -75,6 +101,8 @@
 ### Variables 패널에서 보기
 
 **실행 및 디버그 › Variables** 패널에서 변수를 우클릭하고 **Preview Image**를 고릅니다. 쓸 수 있는 렌더러가 여럿이면 선택창이 뜹니다. 리스트 원소나 객체 속성처럼 트리 안쪽 항목도 됩니다.
+
+![Variables 패널 우클릭 메뉴의 Preview Image](images/demos/variables-menu.png)
 
 ### Alt 누르고 호버
 
@@ -96,6 +124,8 @@ VS Code는 멈춰 있는 동안 줄 끝에 변수 값을 보여 주는 기능이
 | --- | --- | --- |
 | NumPy, imageio, scikit-image | `ndarray`, `memmap`, `MaskedArray` | `opencv-python` 또는 `matplotlib` |
 | JAX, CuPy | `ArrayImpl`, `ndarray` | `opencv-python` 또는 `matplotlib` |
+| xarray, dask | `DataArray`, `Array` | `opencv-python` 또는 `matplotlib` |
+| OpenCV | `UMat` | `opencv-python` 또는 `matplotlib` |
 | Pillow | `Image`, `*ImageFile` | `pillow` |
 | OpenCV | `ndarray` (BGR로 저장) | `opencv-python` |
 | Matplotlib | `Figure`, `SubFigure`, `Axes` | `matplotlib` |
@@ -104,6 +134,8 @@ VS Code는 멈춰 있는 동안 줄 끝에 변수 값을 보여 주는 기능이
 | pandas | `DataFrame`, `Series` (`.plot()`으로 그림) | `pandas` + `matplotlib` |
 | TensorFlow | `EagerTensor`, `ResourceVariable` | `pillow` |
 | PyTorch | `Tensor`, `Parameter` (디바이스·grad 여부 무관) | `pillow` |
+| torchvision | `Image`, `Mask`, `Video` (tv_tensors) | `pillow` |
+| 배치 (NumPy, JAX, CuPy, xarray, dask의 `ndarray`류, PyTorch `Tensor`, TensorFlow `EagerTensor`) | 4차원 `N×C×H×W` 또는 `N×H×W×C`, 모든 항목을 한 장에 타일링 (`[Grid]`) | `pillow` |
 | SimpleITK | `Image` | `SimpleITK` + `pillow` |
 | nibabel | `Nifti1Image`, `Nifti2Image`, `MGHImage`, … | `nibabel` + `pillow` |
 | Bokeh | `figure`, `GridPlot`, `Row`, `Column` | `bokeh` + `selenium` 또는 `playwright` |
@@ -127,6 +159,8 @@ VS Code는 멈춰 있는 동안 줄 끝에 변수 값을 보여 주는 기능이
 | `pythonImagePreview.keepHistory` | `false` | 켜면 미리보기마다 새 파일로 저장해 각각 다른 탭에 열리므로 이전 결과와 비교할 수 있습니다. 끄면 변수마다 파일 하나를 덮어씁니다. |
 | `pythonImagePreview.clearOnSessionEnd` | `true` | 디버그 세션이 끝나면 미리보기 파일을 지웁니다. |
 | `pythonImagePreview.openBeside` | `true` | 미리보기를 현재 칸이 아니라 옆 칸에 엽니다. |
+| `pythonImagePreview.viewer` | `"image"` | `image`: VS Code 기본 이미지 뷰어. `inspector`: 픽셀 값, 채널, 히스토그램이 있는 확장의 뷰어. |
+| `pythonImagePreview.arrayRenderer` | `"matplotlib"` | 일반 배열에 먼저 쓸 렌더러. `matplotlib`은 RGB, `opencv`는 BGR로 읽습니다. 썸네일, 호버, 기본 렌더러 명령에 쓰입니다. |
 | `pythonImagePreview.grayscaleColormap` | `"gray"` | Matplotlib 렌더러로 2차원 배열을 그릴 때 쓸 컬러맵 (`gray`, `viridis`, `magma` 등). |
 | `pythonImagePreview.hoverPreview` | `true` | <kbd>Alt</kbd>를 누른 채 이미지 변수에 마우스를 올리면 shape/dtype과 썸네일을 보여 줍니다. |
 | `pythonImagePreview.hoverThumbnailWidth` | `320` | 호버 썸네일의 최대 너비(px). 비율을 유지한 채 줄입니다. |
@@ -136,7 +170,9 @@ VS Code는 멈춰 있는 동안 줄 끝에 변수 값을 보여 주는 기능이
 | `pythonImagePreview.inlineThumbnailLimit` | `40` | 한 번 멈출 때 썸네일로 그릴 변수 수. 멈춘 줄에서 가까운 것부터 그립니다. |
 | `pythonImagePreview.inlineValues` | `"off"` | `images`: 이미지 로컬 변수만 `이름: shape dtype`으로 표시. `all`: 다른 변수도 VS Code 기본처럼 값을 표시. `off`: VS Code 기본 동작. `debug.inlineValues`가 `auto`나 `on`이어야 합니다. |
 
-설정은 바꾸는 즉시 적용됩니다. `cacheDirectory`를 바꾸면 이전 폴더는 지웁니다.
+설정은 바꾸는 즉시 적용됩니다. `cacheDirectory`를 바꾸면 이전 폴더는 지웁니다. `Python Image Preview: Open Settings` 명령으로 이 목록을 설정 화면에서 바로 열 수 있습니다.
+
+![확장의 설정 화면](images/demos/settings.png)
 
 예전 버전처럼 소스 파일 옆에 미리보기를 두고 싶으면:
 
@@ -149,7 +185,10 @@ VS Code는 멈춰 있는 동안 줄 끝에 변수 값을 보여 주는 기능이
 | 명령 | 설명 |
 | --- | --- |
 | `Python Image Preview: Preview Image at Cursor` | 쓸 수 있는 렌더러를 Quick Fix 메뉴로 보여 줍니다. |
+| `Python Image Preview: Preview Image with Default Renderer` (<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>) | 커서 위치의 변수나 선택 영역을 첫 번째 렌더러로 메뉴 없이 바로 그립니다. |
+| `Inspect Image File` (탐색기 우클릭) | 아무 이미지 파일이나 인스펙터로 엽니다. |
 | `Preview Image` (Variables 패널 우클릭) | 선택한 변수를 그립니다. 렌더러가 여럿이면 고르게 합니다. |
+| `Inspect Image` (Variables 패널 우클릭) | 같은 동작을 인스펙터로 엽니다. |
 | `Python Image Preview: Open Settings` | 이 확장의 설정만 모아서 엽니다. |
 | `Python Image Preview: Clear Preview Cache` | 지금까지 저장한 미리보기 파일을 모두 지웁니다. |
 
@@ -167,6 +206,7 @@ workspace 확장으로 선언되어 있어서 Remote-SSH, WSL, Dev Containers에
 - **인라인 값이 하나도 안 보여요.** `debug.inlineValues`를 `auto`나 `on`으로 두세요. VS Code와 마찬가지로 Locals만 봅니다.
 - **일반 변수의 인라인 값이 사라졌어요.** `images` 모드에서는 그렇습니다. `pythonImagePreview.inlineValues`를 `all`로 바꾸면 함께 보이고(모듈, 함수, 클래스는 계속 숨김), `off`로 두면 VS Code 기본으로 돌아갑니다.
 - **호버에 썸네일 대신 값만 나와요.** 그건 디버거의 호버입니다. 이름 앞 썸네일에 마우스를 올리거나, <kbd>Alt</kbd>(macOS는 <kbd>⌥</kbd>)를 누른 채 이름에 올리세요. <kbd>Alt</kbd> 호버는 Pylance 같은 다른 확장의 호버와 팝업을 나눠 쓰므로, 스크롤이 생기면 `pythonImagePreview.hoverThumbnailHeight`를 낮추세요.
+- **색이 뒤집혀 보여요.** 채널 순서를 잘못 읽은 것입니다. Quick Fix 메뉴에서 다른 렌더러를 고르거나, `pythonImagePreview.arrayRenderer`를 바꾸세요(RGB 배열은 `matplotlib`, `cv2.imread`로 읽은 BGR 배열은 `opencv`).
 - **렌더링에 실패해요.** 오류 메시지의 **Show Log**를 누르면 Python 예외를 출력 채널에서 볼 수 있습니다.
 - **Plotly / Bokeh / Altair가 안 돼요.** 각 라이브러리의 이미지 내보내기 백엔드(`kaleido`, `selenium`/`playwright`, `vl-convert-python`)가 필요합니다.
 

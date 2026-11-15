@@ -28,14 +28,16 @@ Inspecting image data in a debugger usually means typing `plt.imshow(...)` into 
 1. Install the extension. There is nothing to configure; the libraries used for rendering are the ones already installed in the Python environment you debug.
 2. Open a Python file, set a breakpoint after an image has been created, and start debugging (<kbd>F5</kbd>).
 3. When the debugger pauses, a **small thumbnail appears in front of every image-like variable of the current function**. Hover it to see the image larger, together with its shape and dtype.
-4. For the full-size picture, put the cursor on the variable and press <kbd>Ctrl</kbd>+<kbd>.</kbd> (macOS <kbd>⌘</kbd>+<kbd>.</kbd>), then choose `[Matplotlib] Preview img` or another renderer. The image opens in an editor tab next to your code.
+4. For the full-size picture, put the cursor on the variable and press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> (macOS <kbd>⌘</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>). The image opens in an editor tab next to your code. To choose the renderer yourself, press <kbd>Ctrl</kbd>+<kbd>.</kbd> (macOS <kbd>⌘</kbd>+<kbd>.</kbd>) instead and pick `[Matplotlib] Preview img`, `[OpenCV] Preview img` or another entry.
+
+![Thumbnails before every image-like variable while paused](images/demos/inline-thumbnails.png)
 
 That is all there is to it. The sections below describe each way of looking at an image in more detail.
 
 ## Demos
 
 <details>
-<summary>Show demos</summary>
+<summary>Show demos (animated, from version 1.0)</summary>
 
 | | |
 | --- | --- |
@@ -54,19 +56,43 @@ That is all there is to it. The sections below describe each way of looking at a
 
 While the debugger is paused, every local variable that can be rendered as an image gets a thumbnail the height of one text line, placed right before its name on every line that mentions it. They update when you step and disappear when the program runs on.
 
-- **Hover a thumbnail** to see a larger version with the variable's type, shape and dtype, for example `img · ndarray (480, 640, 3) uint8`, and links such as `OpenCV · Matplotlib`. Click a link to open the full-size image. The debugger's own value popup opens in the same tooltip above it; scroll down, or press <kbd>Alt</kbd> to show only the preview.
+- **Hover a thumbnail** to see a larger version with the variable's type, shape, dtype and value range, for example `img · ndarray (480, 640, 3) uint8 · min 0 · max 255 · mean 127.3`, and links such as `Matplotlib · OpenCV · Inspect`. Click a renderer to open the full-size image, or **Inspect** to open it in the inspector. The debugger's own value popup opens in the same tooltip above it; scroll down, or press <kbd>Alt</kbd> to show only the preview.
 - Only variables of the **current function** (the Locals scope) are shown, and only in the file the debugger is paused in. Attributes such as `self.img` are not decorated; use the Quick Fix or the hover for those.
-- Variables mentioned closest to the paused line are rendered first, up to `pythonImagePreview.inlineThumbnailLimit` variables per stop.
+- Variables mentioned closest to the paused line are rendered first, up to `pythonImagePreview.inlineThumbnailLimit` variables per stop. Thumbnails are rendered at reduced size (arrays subsampled, figures at a low dpi), so even large images cost little; the full-size file is only written when you open a preview.
 - Turn this off with `pythonImagePreview.inlineThumbnails` if it gets in the way.
 
-### Full-size preview (Quick Fix)
+![Hover on a thumbnail: shape, dtype, value range, renderer links and the image](images/demos/hover-preview.png)
+
+### Full-size preview
+
+The quickest way: put the cursor on a variable name and press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> (macOS <kbd>⌘</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>). The first applicable renderer is used and the PNG opens in the column beside the editor. The same command is in the editor's context menu as **Preview Image with Default Renderer**.
+
+To pick the renderer yourself (Quick Fix):
 
 1. Place the cursor on a variable name, for example `img`, `mask` or `self.image`.
 2. Press <kbd>Ctrl</kbd>+<kbd>.</kbd> (macOS <kbd>⌘</kbd>+<kbd>.</kbd>). Alternatively right-click and choose **Preview Image at Cursor**, or click the light bulb.
-3. Pick a renderer. Each entry is labelled with the library that will write the image, e.g. `[OpenCV] Preview img` treats the array as BGR, `[Matplotlib] Preview img` as RGB.
+3. Pick a renderer. Each entry is labelled with the library that will write the image: `[Matplotlib] Preview img` treats the array as RGB, `[OpenCV] Preview img` as BGR, `[Grid] Preview batch` tiles every item of a batch into one image.
 4. The PNG opens in the column beside the editor. Run the same steps again after stepping to refresh it, or turn on `pythonImagePreview.keepHistory` to keep every version in its own tab and compare them side by side.
 
+![Quick Fix menu listing the available renderers](images/demos/quick-fix.png)
+
 Only renderers whose library can be imported in the debugged interpreter are offered. If you see `[Matplotlib]` but not `[OpenCV]`, `cv2` is not installed in that environment. Nothing is rendered until you pick an entry, so opening the menu is cheap.
+
+Plain arrays can be read as RGB or BGR; `pythonImagePreview.arrayRenderer` (default `matplotlib`, i.e. RGB) decides which renderer comes first and is used for thumbnails, the hover and the default-renderer command. Set it to `opencv` if your arrays come from `cv2.imread`.
+
+### Batches as a grid
+
+Arrays and tensors with four dimensions (`N×C×H×W` or `N×H×W×C`) get a `[Grid]` entry that tiles every item into one near-square image, with thin gaps between the items. The other renderers show the first item only.
+
+![A batch of four tensors tiled into a grid](images/demos/grid.png)
+
+### Inspector
+
+`[Inspect] Inspect img` at the bottom of the Quick Fix menu, **Inspect Image** in the Variables view's context menu and the **Inspect** link in a hover open the image in the extension's own viewer instead of VS Code's: scroll to zoom around the cursor, drag to pan, <kbd>0</kbd> fits the image and <kbd>1</kbd> shows actual pixels. The bar shows the coordinates and `rgba` value of the pixel under the cursor, the R/G/B/A/Gray buttons show one channel, and the bottom strip is a histogram with the min, max and mean of the shown channel. Set `pythonImagePreview.viewer` to `inspector` to open every preview this way. Right-clicking any image file in the Explorer offers **Inspect Image File** too.
+
+![The inspector: pixel value under the cursor, channel buttons and histogram](images/demos/inspector.png)
+
+The values are those of the 8-bit PNG the renderer wrote, after the normalization described under *Supported objects*, not the original floats.
 
 ### Any expression, not only variables
 
@@ -75,6 +101,8 @@ Select a piece of code, for example `batch[0]`, `img[..., 0]`, `self.model.weigh
 ### From the Variables view
 
 Right-click a variable in the **Run and Debug › Variables** panel and choose **Preview Image**. If several renderers apply, a picker asks which one to use. This also works for nested entries such as items of a list or attributes of an object.
+
+![Preview Image in the Variables view context menu](images/demos/variables-menu.png)
 
 ### Hover with Alt
 
@@ -96,6 +124,8 @@ The **Library** column is the library the object comes from; **Renders with** li
 | --- | --- | --- |
 | NumPy, imageio, scikit-image | `ndarray`, `memmap`, `MaskedArray` | `opencv-python` or `matplotlib` |
 | JAX, CuPy | `ArrayImpl`, `ndarray` | `opencv-python` or `matplotlib` |
+| xarray, dask | `DataArray`, `Array` | `opencv-python` or `matplotlib` |
+| OpenCV | `UMat` | `opencv-python` or `matplotlib` |
 | Pillow | `Image`, `*ImageFile` | `pillow` |
 | OpenCV | `ndarray` (written as BGR) | `opencv-python` |
 | Matplotlib | `Figure`, `SubFigure`, `Axes` | `matplotlib` |
@@ -104,6 +134,8 @@ The **Library** column is the library the object comes from; **Renders with** li
 | pandas | `DataFrame`, `Series` (via `.plot()`) | `pandas` + `matplotlib` |
 | TensorFlow | `EagerTensor`, `ResourceVariable` | `pillow` |
 | PyTorch | `Tensor`, `Parameter` (any device, with or without grad) | `pillow` |
+| torchvision | `Image`, `Mask`, `Video` (tv_tensors) | `pillow` |
+| Batches (NumPy, JAX, CuPy, xarray, dask `ndarray`-likes, PyTorch `Tensor`, TensorFlow `EagerTensor`) | 4-D `N×C×H×W` or `N×H×W×C`, every item tiled into one image (`[Grid]`) | `pillow` |
 | SimpleITK | `Image` | `SimpleITK` + `pillow` |
 | nibabel | `Nifti1Image`, `Nifti2Image`, `MGHImage`, … | `nibabel` + `pillow` |
 | Bokeh | `figure`, `GridPlot`, `Row`, `Column` | `bokeh` + `selenium` or `playwright` |
@@ -127,6 +159,8 @@ Arrays and tensors are normalized before saving, so the common shapes just work:
 | `pythonImagePreview.keepHistory` | `false` | Write every preview to a new file so each opens in its own tab and earlier ones stay open for comparison. Off: a variable reuses one file. |
 | `pythonImagePreview.clearOnSessionEnd` | `true` | Delete preview files when the debug session ends. |
 | `pythonImagePreview.openBeside` | `true` | Open previews beside the editor instead of in the active column. |
+| `pythonImagePreview.viewer` | `"image"` | `image`: VS Code's image preview. `inspector`: the extension's viewer with pixel values, channels and a histogram. |
+| `pythonImagePreview.arrayRenderer` | `"matplotlib"` | Renderer that comes first for plain arrays: `matplotlib` reads them as RGB, `opencv` as BGR. Used for thumbnails, the hover and the default-renderer command. |
 | `pythonImagePreview.grayscaleColormap` | `"gray"` | Matplotlib colormap for 2-D arrays rendered with the Matplotlib renderer (`gray`, `viridis`, `magma`, …). |
 | `pythonImagePreview.hoverPreview` | `true` | Show shape/dtype and a thumbnail when hovering an image-like variable with <kbd>Alt</kbd> held. |
 | `pythonImagePreview.hoverThumbnailWidth` | `320` | Maximum width of the hover thumbnail in pixels; the image is scaled down to fit, keeping its aspect ratio. |
@@ -136,7 +170,9 @@ Arrays and tensors are normalized before saving, so the common shapes just work:
 | `pythonImagePreview.inlineThumbnailLimit` | `40` | Variables rendered as inline thumbnails per stop, nearest to the paused line first. |
 | `pythonImagePreview.inlineValues` | `"off"` | `images`: `name: shape dtype` for image-like local variables only. `all`: other variables show their value too, as VS Code normally does. `off`: leave inline values to VS Code. Needs `debug.inlineValues` set to `auto` or `on`. |
 
-Changes apply immediately. Switching `cacheDirectory` removes the folder used before.
+Changes apply immediately. Switching `cacheDirectory` removes the folder used before. `Python Image Preview: Open Settings` opens this list in the Settings editor.
+
+![The extension's settings](images/demos/settings.png)
 
 To keep previews next to the source file, as earlier versions did:
 
@@ -149,7 +185,10 @@ To keep previews next to the source file, as earlier versions did:
 | Command | Description |
 | --- | --- |
 | `Python Image Preview: Preview Image at Cursor` | Opens the Quick Fix menu with the available renderers. |
+| `Python Image Preview: Preview Image with Default Renderer` (<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd>) | Renders the variable at the cursor or the selection with the first applicable renderer, without a menu. |
+| `Inspect Image File` (Explorer context menu) | Opens any image file in the inspector. |
 | `Preview Image` (Variables view context menu) | Renders the selected variable, asking which renderer to use if several apply. |
+| `Inspect Image` (Variables view context menu) | The same, opened in the inspector. |
 | `Python Image Preview: Open Settings` | Opens the Settings editor filtered to this extension. |
 | `Python Image Preview: Clear Preview Cache` | Deletes every preview file written so far. |
 
@@ -167,6 +206,7 @@ The extension is declared as a workspace extension, so with Remote-SSH, WSL or D
 - **No inline values at all.** Set `debug.inlineValues` to `auto` or `on`. Like VS Code itself, the extension only looks at the Locals scope.
 - **Plain variables lost their inline values.** That happens in the `images` mode. Set `pythonImagePreview.inlineValues` to `all` to show them as well (modules, functions and classes stay hidden), or to `off` to hand inline values back to VS Code.
 - **The hover shows the plain value, not a thumbnail.** That is the debugger's hover. Hover the thumbnail icon before the name instead, or hold <kbd>Alt</kbd> (<kbd>⌥</kbd> on macOS) while hovering the name. With <kbd>Alt</kbd>, other extensions' hovers (Pylance's type line, for example) share the popup; lower `pythonImagePreview.hoverThumbnailHeight` if it needs scrolling.
+- **Colors look swapped.** The array was read with the wrong channel order. Pick the other renderer in the Quick Fix menu, or change `pythonImagePreview.arrayRenderer` (`matplotlib` for RGB arrays, `opencv` for BGR arrays from `cv2.imread`).
 - **Rendering fails.** The error message offers **Show Log**; the Python exception is in the output channel.
 - **Plotly / Bokeh / Altair.** These need their own export backends (`kaleido`, `selenium`/`playwright`, `vl-convert-python`).
 
