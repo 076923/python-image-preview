@@ -306,7 +306,7 @@
 		"lint": "eslint src",
 		"pretest": "tsc -p ./ && npm run lint",
 		"test": "vscode-test",
-		"vsix": "vsce package --out vsix/"
+		"vsix": "vsce package --out vsix/ && node -e \"const f=require('fs'),v=require('./package.json').version;f.renameSync('vsix/python-image-preview-'+v+'.vsix','vsix/076923.python-image-preview-'+v+'.vsix')\""
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",
