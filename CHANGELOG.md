@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.2.0] - 2026-11-15
+
+- Fixed: thumbnails and the hover rendered RGB arrays with OpenCV (BGR) when `cv2` was installed, so colors were swapped. New setting `pythonImagePreview.arrayRenderer` (default `matplotlib`) picks the renderer used first for plain arrays
+- **Grid** renderer: every item of a batch (`N×C×H×W`, `N×H×W×C`) tiled into one image, offered for arrays and tensors with 4 dimensions
+- **Inspector**: a viewer with zoom and pan, the value of the pixel under the cursor, R/G/B/A/gray channel toggles and a histogram. Open it from `[Inspect]` at the bottom of the Quick Fix menu, **Inspect Image** in the Variables view's context menu or the hover's **Inspect** link, make it the default with `pythonImagePreview.viewer`, or right-click an image file in the Explorer
+- Hover and thumbnail tooltips show `min`, `max` and `mean` next to the shape and dtype
+- `Ctrl+Alt+P` (macOS `⌘+Alt+P`) previews the variable at the cursor or the selection with the first applicable renderer, without a menu (`Preview Image with Default Renderer`, also in the editor context menu)
+- Thumbnails are rendered at reduced size in the debugged process (arrays are subsampled, figures saved at a lower dpi, Pillow images shrunk), so stepping through functions with large images stays fast; the full-size file is written only when a preview is opened
+- New object types: xarray `DataArray`, dask `Array`, OpenCV `UMat`, torchvision `Image`/`Mask`/`Video` tv_tensors
+- Command titles and setting descriptions are localized; Korean is included (`package.nls.ko.json`)
+
 ## [1.1.0] - 2026-11-08
 
 - Renderers are only probed (`importlib.util.find_spec`) when the Quick Fix menu opens; the image is rendered when you pick one. Hovering the lightbulb no longer writes files or imports libraries in the debugged process, and failures now show an error with a **Show Log** button
